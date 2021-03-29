@@ -1,15 +1,15 @@
+import com.google.common.collect.Streams;
+import org.apache.commons.math3.util.Pair;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.time.Duration;
-import java.util.Base64;
 
 public class Utility{
 
@@ -26,7 +26,7 @@ public class Utility{
         List<URI> targets = new List<URI>;
 
         for(String y : ids_Set) {
-            temp = new URI("https://eluv.io/items/" + y + "-H \"Authorization:" + base(y) + "\"");
+            URI temp = new URI("https://eluv.io/items/" + y + "-H \"Authorization:" + base(y) + "\"");
             targets.add(temp);
         }
 
@@ -34,7 +34,7 @@ public class Utility{
                 .map(url -> httpClient.sendAsync(
                         HttpRequest.newBuilder(url)
                                 .GET()
-                               // .setHeader()
+                                // .setHeader()
                                 .build(),
                         HttpResponse.BodyHandlers.ofString())
                         .thenApply(response -> response.body()))
@@ -49,7 +49,7 @@ public class Utility{
         for(String x : list){
             hash_Set.add(x);
         }
-        return hash_Set
+        return hash_Set;
     }
     /** Converts ID to base64 for authorization */
     private String base(String x){
