@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.time.Duration;
+import java.util.Base64;
 
 public class Utility{
 
@@ -20,5 +21,39 @@ public class Utility{
             .connectTimeout(Duration.ofSeconds(10))
             .build();
 
-    public static void main(String[] args){}
+    public static void main(String[] args){
+        Set<String> ids_Set = uniqueIds(ids);
+        List<URI> targets = new List<URI>;
+
+        for(String y : ids_Set) {
+            temp = new URI("https://eluv.io/items/" + y + "-H \"Authorization:" + base(y) + "\"");
+            targets.add(temp);
+        }
+
+        List<CompletableFuture<String>> result = targets.stream()
+                .map(url -> httpClient.sendAsync(
+                        HttpRequest.newBuilder(url)
+                                .GET()
+                               // .setHeader()
+                                .build(),
+                        HttpResponse.BodyHandlers.ofString())
+                        .thenApply(response -> response.body()))
+                .collect(Collectors.toList());
+
+        for (CompletableFuture<String> future : result) {
+            System.out.println(future.get());
+        }
+    }
+    /** Prevents unnecessary queries for item IDs that have already been seen */
+    private Set<String> uniqueIds(List<String> list){
+        Set<String> hash_Set = new HashSet<String>();
+        for(String x : list){
+            hash_Set.add(x);
+        }
+        return hash_Set
+    }
+    /** Converts ID to base64 for authorization */
+    private String base(String x){
+        return Base64.getEncoder().encodeToString(x.getBytes());
+    }
 }
