@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import java.time.Duration;
 
 public class Utility{
-
+    /** Max of 5 simulatneous calls */
     private static final ExecutorService executorService = Executors.newFixedThreadPool(5);
 
     private static final HttpClient httpClient = HttpClient.newBuilder()
@@ -22,14 +22,18 @@ public class Utility{
             .build();
 
     public static void main(String[] args){
+        /** Assumed a list of ids would be provided by client */
+
         Set<String> ids_Set = uniqueIds(ids);
         List<URI> targets = new List<URI>;
 
+        /** creates the call for each id */
         for(String y : ids_Set) {
             URI temp = new URI("https://eluv.io/items/" + y + "-H \"Authorization:" + base(y) + "\"");
             targets.add(temp);
         }
 
+        /** gets information about ids */
         List<CompletableFuture<String>> result = targets.stream()
                 .map(url -> httpClient.sendAsync(
                         HttpRequest.newBuilder(url)
@@ -40,8 +44,14 @@ public class Utility{
                         .thenApply(response -> response.body()))
                 .collect(Collectors.toList());
 
+        /**pairs ids and information*/
         List<Pair> pairs = Streams.zip(targets.stream(), result.stream(), Pair::new)
                 .collect(Collectors.toList());
+
+        /**prints out each unique id and information about id for client*/
+        for(Pair pair : pairs){
+            System.out.println(pair.key + ": " + pair.value);
+        }
     }
     /** Prevents unnecessary queries for item IDs that have already been seen */
     private Set<String> uniqueIds(List<String> list){
