@@ -18,6 +18,7 @@ public class Utility{
     private static final HttpClient httpClient = HttpClient.newBuilder()
             .executor(executorService)
             .version(HttpClient.Version.HTTP_2)
+            .setHeader(Authorization)
             .connectTimeout(Duration.ofSeconds(10))
             .build();
 
@@ -29,7 +30,7 @@ public class Utility{
 
         /** creates the call for each id */
         for(String y : ids_Set) {
-            URI temp = new URI("https://eluv.io/items/" + y + "-H \"Authorization:" + base(y) + "\"");
+            URI temp = new URI("https://eluv.io/items/" + y);
             targets.add(temp);
         }
 
@@ -38,7 +39,7 @@ public class Utility{
                 .map(url -> httpClient.sendAsync(
                         HttpRequest.newBuilder(url)
                                 .GET()
-                                // .setHeader()
+                                .header(base(url))
                                 .build(),
                         HttpResponse.BodyHandlers.ofString())
                         .thenApply(response -> response.body()))
