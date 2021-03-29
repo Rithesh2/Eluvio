@@ -40,9 +40,8 @@ public class Utility{
                         .thenApply(response -> response.body()))
                 .collect(Collectors.toList());
 
-        for (CompletableFuture<String> future : result) {
-            System.out.println(future.get());
-        }
+        List<Pair> pairs = Streams.zip(targets.stream(), result.stream(), Pair::new)
+                .collect(Collectors.toList());
     }
     /** Prevents unnecessary queries for item IDs that have already been seen */
     private Set<String> uniqueIds(List<String> list){
