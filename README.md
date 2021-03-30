@@ -1,4 +1,7 @@
 # Eluvio
+
+Final code can be found inside :   eluvio/src/main/java/com/eluvio/Utility.java
+
 Option 2 - Applications
 
 Imagine you have a program that needs to look up information about items using their item ID, often in large batches.
