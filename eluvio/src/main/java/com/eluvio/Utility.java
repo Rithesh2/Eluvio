@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 
 public class Utility{
-    /** Max of 5 simulatneous calls */
+    /** Max of 5 simultaneous calls */
     private static final ExecutorService executorService = Executors.newFixedThreadPool(5);
     /** executes client calls */
     private static final HttpClient httpClient = HttpClient.newBuilder()
